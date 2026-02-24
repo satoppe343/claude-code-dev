@@ -18,26 +18,6 @@
     // Claude Code: Feature 方式でインストール (Dockerfile との関心分離)
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
-  "customizations": {
-    "vscode": {
-      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
-      "settings": {
-        "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace",
-        "editor.formatOnSave": true,
-        "editor.defaultFormatter": "esbenp.prettier-vscode",
-        "editor.codeActionsOnSave": {
-          "source.fixAll.eslint": "explicit"
-        },
-        // initializeCommand 完了後のターミナルを自動終了
-        "terminal.integrated.enablePersistentSessions": false,
-        "terminal.integrated.defaultProfile.linux": "zsh",
-        "terminal.integrated.profiles.linux": {
-          "bash": { "path": "bash", "icon": "terminal-bash" },
-          "zsh": { "path": "zsh" }
-        }
-      }
-    }
-  },
   // initializeCommand: ホスト側で実行。macOS キーチェーンからトークンを取得
   "initializeCommand": ".devcontainer/load-secrets.sh",
   // postCreateCommand: コンテナ作成後に実行。zsh プラグイン + Starship 設定
@@ -45,5 +25,65 @@
   // postStartCommand: コンテナ起動ごとに実行。認証情報注入 + ファイアウォール設定
   "postStartCommand": "/workspace/.devcontainer/post-start-command.sh",
   // ファイアウォール設定完了まで操作を待機
-  "waitFor": "postStartCommand"
+  "waitFor": "postStartCommand",
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "files.encoding": "utf8",
+        "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit",
+          "source.addMissingImports": "explicit", // import文の 自動追加
+          "source.organizeImports": "explicit" // import文の 自動未使用import削除 & 自動アルファベット順ソート
+        },
+        // initializeCommand 完了後のターミナルを自動終了
+        "terminal.integrated.enablePersistentSessions": false,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": { "path": "bash", "icon": "terminal-bash" },
+          "zsh": { "path": "zsh" }
+        },
+        // 各言語共通設定
+        "editor.formatOnPaste": true,
+        "files.autoSave": "afterDelay",
+        "editor.wordWrapColumn": 120,
+        "editor.tabSize": 2,
+        "editor.fontSize": 14,
+        "editor.wordWrap": "off",
+        // Emmetの設定
+        "emmet.variables": {
+          "lang": "ja"
+        },
+        // 括弧記号色付
+        "editor.bracketPairColorization.enabled": true,
+        "editor.guides.bracketPairs": true,
+        // 拡張機能を追加
+        "extensions": [
+          "ms-ceintl.vscode-language-pack-ja", // Japanese Language Pack for Visual Studio Code
+          "dbaeumer.vscode-eslint", // VS Code ESLint
+          "esbenp.prettier-vscode", // Prettier - Code formatter
+          "truman.autocomplate-shell", // AutoComplate shell
+          "formulahendry.auto-rename-tag", // Auto Rename Tag
+          "eamodio.gitlens", // GitLens - Git superchaged
+          "donjayamanne.githistory", // Git History
+          "oderwat.indent-rainbow", // indent-rainbow
+          "mechatroner.rainbow-csv", // Rainbow CSV
+          "streetsidesoftware.code-spell-checker", // Code Spell Checker
+          "yzhang.markdown-all-in-one", // Markdown All in One
+          "shd101wyy.markdown-preview-enhanced", // Markdown Preview Enhanced
+          "bierner.markdown-mermaid", // Markdown Preview Mermaid Support
+          "zainChen.json", // json
+          "mikestead.dotenv", // DotEnv
+          "ms-azuretools.vscode-docker", // docker
+          "zoma.vscode-auto-open-workspace", // open .code-workspace
+          "vscode-icons-team.vscode-icons", // rich icon
+          "dsznajder.es7-react-js-snippets", // ES7+ React/Redux/React-Native snippets
+          "styled-components.vscode-styled-components", // CSS styled-components
+          "anthropic.claude-code" // Claude Code
+        ]
+      }
+    }
+  }
 }
