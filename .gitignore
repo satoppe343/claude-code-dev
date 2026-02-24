@@ -1,0 +1,44 @@
+# load-secrets.sh が生成する認証情報ファイル
+.devcontainer/.env.run
+.devcontainer/.env
+.devcontainer/*.env
+.devcontainer/.credentials.json
+
+# 秘密鍵・証明書 (誤配置の防止)
+*.pem
+*.key
+*.p12
+*.pfx
+
+# 環境変数 (ルートレベル)
+.env
+.env.*
+!.env.example
+
+# OS 生成ファイル
+.DS_Store
+Thumbs.db
+
+# エディタ一時ファイル
+*.swp
+*.swo
+*~
+
+# IDE
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# ログ
+*.log
+
+# DevContainer CLI 一時ファイル
+docker-compose.devcontainer.*.yml
+
+# Claude Code ローカル設定
+.claude/settings.local.json

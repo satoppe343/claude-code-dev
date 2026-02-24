@@ -1,0 +1,47 @@
+services:
+  dev:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        TZ: ${TZ:-Asia/Tokyo}
+        ZSH_IN_DOCKER_VERSION: "1.2.1"
+    # ファイアウォール (iptables) に必要
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+
+    volumes:
+      # ワークスペース: macOS では delegated で性能改善
+      - ../:/workspace:delegated
+      # シェル履歴の永続化
+      - claude-code-history:/commandhistory
+      # Claude Code 認証情報・設定・メモリの永続化
+      - claude-code-config:/home/node/.claude
+      # ホスト側の Git 設定を読み取り専用でマウント
+      - ~/.gitconfig:/home/node/.gitconfig:ro
+      # SSH 鍵を読み取り専用でマウント (git push 用)
+      - ~/.ssh:/home/node/.ssh:ro
+
+    working_dir: /workspace
+
+    environment:
+      # 大規模コードベースでの OOM 防止
+      NODE_OPTIONS: "--max-old-space-size=4096"
+      CLAUDE_CONFIG_DIR: /home/node/.claude
+      DEVCONTAINER: "true"
+      # 大規模リポジトリでのプロンプト描画遅延を防止
+      POWERLEVEL9K_DISABLE_GITSTATUS: "true"
+
+    # load-secrets.sh が macOS キーチェーンから生成する OAuth トークンファイル
+    env_file:
+      - path: .env.run
+        required: false
+
+    # コンテナが即終了しないように (devcontainer 以外での利用時)
+    tty: true
+    stdin_open: true
+
+volumes:
+  claude-code-history:
+  claude-code-config:

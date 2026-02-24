@@ -1,0 +1,36 @@
+{
+  "name": "claude-code-dev",
+  "dockerComposeFile": "docker-compose.yml",
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+  "remoteUser": "node",
+  "features": {
+    // Claude Code は Feature 方式でインストール (Dockerfile との関心分離)
+    "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
+      "settings": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.codeActionsOnSave": {
+          "source.fixAll.eslint": "explicit"
+        },
+        // initializeCommand 完了後のターミナルを自動終了
+        "terminal.integrated.enablePersistentSessions": false,
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": {
+          "bash": { "path": "bash", "icon": "terminal-bash" },
+          "zsh": { "path": "zsh" }
+        }
+      }
+    }
+  },
+  // initializeCommand: ホスト側で実行。macOS キーチェーンからトークンを取得
+  "initializeCommand": ".devcontainer/load-secrets.sh",
+  // postStartCommand: コンテナ内で実行。認証情報の注入 + ファイアウォール設定
+  "postStartCommand": "/usr/local/bin/inject-credentials.sh && sudo /usr/local/bin/setup-firewall.sh",
+  // ファイアウォール設定完了まで操作を待機
+  "waitFor": "postStartCommand"
+}
