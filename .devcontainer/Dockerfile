@@ -81,39 +81,3 @@ ENV PATH=$PATH:/usr/local/share/npm-global/bin
 ENV SHELL=/bin/zsh
 ENV EDITOR=nano
 ENV VISUAL=nano
-
-# zsh-in-docker で Oh My Zsh + テーマ + プラグインを一括インストール
-# -x: zsh/git/curl は既にインストール済みのためスキップ
-# 外部プラグイン: URL指定で自動 git clone される
-ARG ZSH_IN_DOCKER_VERSION=1.2.1
-RUN sh -c "$(wget -O- https://github.com/deluan/zsh-in-docker/releases/download/v${ZSH_IN_DOCKER_VERSION}/zsh-in-docker.sh)" -- \
-    -t powerlevel10k/powerlevel10k \
-    -p git \
-    -p npm \
-    -p node \
-    -p docker \
-    -p docker-compose \
-    -p sudo \
-    -p extract \
-    -p z \
-    -p colored-man-pages \
-    -p history-substring-search \
-    -p https://github.com/zsh-users/zsh-autosuggestions \
-    -p https://github.com/zdharma-continuum/fast-syntax-highlighting \
-    -p https://github.com/zsh-users/zsh-completions \
-    -a 'ZSH_AUTOSUGGEST_BUFFER_MAX_SIZE=20' \
-    -a 'ZSH_AUTOSUGGEST_USE_ASYNC=1' \
-    -a 'ZSH_AUTOSUGGEST_MANUAL_REBIND=1' \
-    -a 'POWERLEVEL9K_DISABLE_CONFIGURATION_WIZARD=true' \
-    -a 'POWERLEVEL9K_DISABLE_GITSTATUS=true' \
-    -a "export PROMPT_COMMAND='history -a' && export HISTFILE=/commandhistory/.zsh_history" \
-    -x
-
-# zsh-in-docker が .zshrc にハードコードする en_US.UTF-8 を ja_JP.UTF-8 に修正
-RUN sed -i "s/en_US.UTF-8/ja_JP.UTF-8/g; s/en_US:en/ja_JP:ja/g" ~/.zshrc
-
-# powerlevel10k テーマを手動インストール
-# zsh-in-docker は "powerlevel10k/powerlevel10k" を GitHub ユーザー名と誤認するため
-# 正しいリポジトリ (romkatv/powerlevel10k) から直接 clone する
-RUN git clone --depth=1 https://github.com/romkatv/powerlevel10k.git \
-    ~/.oh-my-zsh/custom/themes/powerlevel10k

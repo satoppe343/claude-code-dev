@@ -5,13 +5,24 @@
   "workspaceFolder": "/workspace",
   "remoteUser": "node",
   "features": {
-    // Claude Code は Feature 方式でインストール (Dockerfile との関心分離)
+    // Oh My Zsh: zsh 本体は Dockerfile でインストール済みのため installZsh: false
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": false,
+      "configureZshAsDefaultShell": false,
+      "installOhMyZsh": true,
+      "installOhMyZshConfig": true,
+      "upgradePackages": false
+    },
+    // Starship: powerlevel10k (メンテナンスモード) の後継プロンプト
+    "ghcr.io/schlich/devcontainer-features/starship:0": {},
+    // Claude Code: Feature 方式でインストール (Dockerfile との関心分離)
     "ghcr.io/anthropics/devcontainer-features/claude-code:1": {}
   },
   "customizations": {
     "vscode": {
       "extensions": ["dbaeumer.vscode-eslint", "esbenp.prettier-vscode"],
       "settings": {
+        "editor.fontFamily": "'JetBrains Mono', Consolas, 'Courier New', monospace",
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
         "editor.codeActionsOnSave": {
@@ -29,8 +40,10 @@
   },
   // initializeCommand: ホスト側で実行。macOS キーチェーンからトークンを取得
   "initializeCommand": ".devcontainer/load-secrets.sh",
-  // postStartCommand: コンテナ内で実行。認証情報の注入 + ファイアウォール設定
-  "postStartCommand": "/usr/local/bin/inject-credentials.sh && sudo /usr/local/bin/setup-firewall.sh",
+  // postCreateCommand: コンテナ作成後に実行。zsh プラグイン + Starship 設定
+  "postCreateCommand": "/workspace/.devcontainer/post-create-command.sh",
+  // postStartCommand: コンテナ起動ごとに実行。認証情報注入 + ファイアウォール設定
+  "postStartCommand": "/workspace/.devcontainer/post-start-command.sh",
   // ファイアウォール設定完了まで操作を待機
   "waitFor": "postStartCommand"
 }

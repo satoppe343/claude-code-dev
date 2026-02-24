@@ -1,0 +1,20 @@
+[line_break]
+disabled = true
+
+[container]
+disabled = true
+
+[hostname]
+ssh_only = false
+format = "[$hostname](#d7a0b0) "
+trim_at = "."
+
+[username]
+disabled = true
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+[directory]
+truncation_length = 3
